@@ -1,0 +1,12 @@
+target/
+node_modules/
+.env
+.env.local
+.DS_Store
+*.log
+.anchor/
+test-ledger/
+dist/
+coverage/
+main.py
+__pycache__/
