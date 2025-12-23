@@ -1,14 +1,9 @@
-/**
- * Calculate recommended wire length based on depth
- */
+import { BASE_WIRE_LENGTH, WIRE_MULTIPLIER, MAX_DEPTH, MIN_DEPTH } from "./constants";
+
 export function calculateRecommendedWire(depth: number): number {
-  const BASE_WIRE = 100_000;
-  return Math.floor(BASE_WIRE * Math.pow(1.5, depth - 1));
+  return Math.floor(BASE_WIRE_LENGTH * Math.pow(WIRE_MULTIPLIER, depth - 1));
 }
 
-/**
- * Format depth level to human-readable zone name
- */
 export function formatDepth(depth: number): string {
   const zones = [
     "Surface",
@@ -25,16 +20,10 @@ export function formatDepth(depth: number): string {
   return zones[Math.min(depth - 1, zones.length - 1)] || "Unknown";
 }
 
-/**
- * Validate depth parameter
- */
 export function isValidDepth(depth: number): boolean {
-  return Number.isInteger(depth) && depth >= 1 && depth <= 10;
+  return Number.isInteger(depth) && depth >= MIN_DEPTH && depth <= MAX_DEPTH;
 }
 
-/**
- * Validate wire length
- */
 export function isValidWireLength(wireLength: number): boolean {
-  return Number.isInteger(wireLength) && wireLength >= 100_000;
+  return Number.isInteger(wireLength) && wireLength >= BASE_WIRE_LENGTH;
 }
