@@ -1,4 +1,7 @@
+mod config;
+
 use clap::{Parser, Subcommand};
+use config::Config;
 
 #[derive(Parser)]
 #[command(name = "divw")]
@@ -8,8 +11,11 @@ struct Cli {
     #[command(subcommand)]
     command: Commands,
     
-    #[arg(short, long, default_value = "https://api.devnet.solana.com")]
-    rpc: String,
+    #[arg(short, long)]
+    rpc: Option<String>,
+    
+    #[arg(short, long)]
+    keypair: Option<String>,
 }
 
 #[derive(Subcommand)]
@@ -29,12 +35,15 @@ enum Commands {
     Status,
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
+    let config = Config::load()?;
+    
+    let rpc_url = cli.rpc.unwrap_or(config.rpc_url);
     
     match cli.command {
         Commands::Init => {
-            println!("Initializing protocol...");
+            println!("Initializing protocol on {}...", rpc_url);
         }
         Commands::Dive { depth, wire } => {
             println!("Creating dive: depth={}, wire={}", depth, wire);
@@ -49,4 +58,6 @@ fn main() {
             println!("Fetching status...");
         }
     }
+    
+    Ok(())
 }
