@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+  SOLANA_VERSION: "1.17.0"
+
+jobs:
+  rust:
+    name: Rust Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: Build
+        run: cargo build --release
+      
+      - name: Test
+        run: cargo test
+
+  sdk:
+    name: SDK Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./sdk
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      
+      - name: Install
+        run: npm install
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Test
+        run: npm test
