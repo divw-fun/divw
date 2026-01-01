@@ -22,6 +22,13 @@ on failed transactions during congestion. DIVW solves this by letting agents
 | Spool Up | Execute when ready and return to surface |
 | Abort | Cancel and retract immediately |
 
+## Token Utility ($DIVW)
+
+| Utility | Description |
+|---------|-------------|
+| Wire Extension | Holders get longer wires for deeper transactions |
+| Priority Spooling | During congestion, holders are processed first |
+
 ## Architecture
 
 ```
@@ -46,12 +53,25 @@ cd sdk && npm install
 ## Usage
 
 ```typescript
-import { DivwClient } from "@divw/sdk";
+import { DivwClient, calculateRecommendedWire } from "@divw/sdk";
 
 const client = new DivwClient(program);
-const dive = await client.createDive({ depth: 5, wireLength: 200000 });
-await client.spoolUp(dive.diveAddress);
+
+const dive = await client.createDive({
+  depth: 5,
+  wireLength: calculateRecommendedWire(5),
+});
+
+await client.spoolUp(dive.diveAddress, true);
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
 
 ## License
 
