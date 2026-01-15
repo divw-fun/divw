@@ -23,4 +23,14 @@ export interface ProtocolStats {
   totalDives: number;
   successfulSpools: number;
   isActive: boolean;
+  authority: web3.PublicKey;
+}
+
+export interface DiveInfo {
+  diver: web3.PublicKey;
+  depth: number;
+  wireLength: number;
+  status: DiveStatus;
+  createdAt: number;
+  executedAt: number;
 }
