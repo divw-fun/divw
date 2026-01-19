@@ -1,4 +1,5 @@
 mod config;
+mod error;
 
 use clap::{Parser, Subcommand};
 use config::Config;
@@ -10,12 +11,15 @@ use config::Config;
 struct Cli {
     #[command(subcommand)]
     command: Commands,
-    
+
     #[arg(short, long)]
     rpc: Option<String>,
-    
+
     #[arg(short, long)]
     keypair: Option<String>,
+
+    #[arg(short, long)]
+    verbose: bool,
 }
 
 #[derive(Subcommand)]
@@ -38,14 +42,22 @@ enum Commands {
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
     let config = Config::load()?;
-    
-    let rpc_url = cli.rpc.unwrap_or(config.rpc_url);
-    
+
+    if cli.verbose {
+        println!("RPC: {}", cli.rpc.as_ref().unwrap_or(&config.rpc_url));
+        println!("Keypair: {:?}", config.keypair_path);
+    }
+
+    config.validate()?;
+
     match cli.command {
         Commands::Init => {
-            println!("Initializing protocol on {}...", rpc_url);
+            println!("Initializing protocol...");
         }
         Commands::Dive { depth, wire } => {
+            if !(1..=10).contains(&depth) {
+                return Err(error::CliError::InvalidDepth.into());
+            }
             println!("Creating dive: depth={}, wire={}", depth, wire);
         }
         Commands::Spool { priority } => {
@@ -58,6 +70,6 @@ fn main() -> anyhow::Result<()> {
             println!("Fetching status...");
         }
     }
-    
+
     Ok(())
 }
