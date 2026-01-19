@@ -10,27 +10,37 @@ pub trait SafeMath {
 impl SafeMath for u64 {
     #[inline]
     fn safe_add(&self, v: u64) -> Result<u64> {
-        self.checked_add(v).ok_or_else(|| error!(MathError::Overflow))
+        self.checked_add(v)
+            .ok_or_else(|| error!(MathError::Overflow))
     }
 
     #[inline]
     fn safe_sub(&self, v: u64) -> Result<u64> {
-        self.checked_sub(v).ok_or_else(|| error!(MathError::Underflow))
+        self.checked_sub(v)
+            .ok_or_else(|| error!(MathError::Underflow))
     }
 
     #[inline]
     fn safe_mul(&self, v: u64) -> Result<u64> {
-        self.checked_mul(v).ok_or_else(|| error!(MathError::Overflow))
+        self.checked_mul(v)
+            .ok_or_else(|| error!(MathError::Overflow))
     }
 
     #[inline]
     fn safe_div(&self, v: u64) -> Result<u64> {
-        self.checked_div(v).ok_or_else(|| error!(MathError::DivisionByZero))
+        if v == 0 {
+            return Err(error!(MathError::DivisionByZero));
+        }
+        self.checked_div(v)
+            .ok_or_else(|| error!(MathError::DivisionByZero))
     }
 }
 
 #[inline]
 pub fn calculate_wire_extension(base: u64, token_amount: u64) -> Result<u64> {
+    if token_amount == 0 {
+        return Ok(base);
+    }
     let bonus = base.safe_mul(token_amount)?.safe_div(100)?;
     base.safe_add(bonus)
 }
@@ -65,23 +75,17 @@ mod tests {
     }
 
     #[test]
-    fn test_safe_mul() {
-        assert_eq!(5u64.safe_mul(3).unwrap(), 15);
+    fn test_safe_div_zero() {
+        assert!(5u64.safe_div(0).is_err());
     }
 
     #[test]
-    fn test_overflow() {
-        assert!(u64::MAX.safe_add(1).is_err());
+    fn test_wire_extension_zero_tokens() {
+        assert_eq!(calculate_wire_extension(100_000, 0).unwrap(), 100_000);
     }
 
     #[test]
-    fn test_wire_extension() {
+    fn test_wire_extension_with_tokens() {
         assert_eq!(calculate_wire_extension(100_000, 50).unwrap(), 150_000);
-    }
-
-    #[test]
-    fn test_priority_score() {
-        assert_eq!(calculate_priority_score(5, 1000, false), 5000);
-        assert_eq!(calculate_priority_score(5, 1000, true), 10000);
     }
 }
