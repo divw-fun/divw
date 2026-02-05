@@ -11,7 +11,7 @@ no-entrypoint = []
 cpi = ["no-entrypoint"]
 
 [dependencies]
-anchor-lang = "0.29.0"
+anchor-lang = "0.32.1"
 divw_math = { path = "../../libs/divw_math" }
 divw_wire = { path = "../../libs/divw_wire" }
 
