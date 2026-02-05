@@ -9,7 +9,7 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
-solana-client = "1.17"
+solana-client = "3.1"
 solana-sdk = "1.17"
 anyhow = "1.0"
 thiserror = "1.0"
