@@ -14,6 +14,7 @@
   <img src="https://img.shields.io/badge/Anchor-0.29.0-7C3AED?style=flat" alt="Anchor" />
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" alt="License" />
 </p>
+CA: *5BNwB9Tw3VVerXpDen8nGSr6o6gfpg3iNHnsQHYRpump*
 
 *The Lifeline Protocol for AI Agents on Solana*
 
