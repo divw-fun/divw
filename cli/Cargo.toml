@@ -12,5 +12,5 @@ clap = { version = "4.4", features = ["derive"] }
 solana-client = "1.17"
 solana-sdk = "1.17"
 anyhow = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 tokio = { version = "1", features = ["full"] }
